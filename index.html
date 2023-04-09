@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Shopping</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 30px;
+            
+        }
+        .table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            border: 1px solid #04aa6d30;
+        }
+        .table thead{
+            background-color: #04aa6d;
+            color: white;
+        }
+        .table tr,
+        .table td,
+        .table th {
+            padding: 10px 15px;
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: #eeeeee40;
+        }
+        .table tbody tr:hover {
+            background-color: #eeeeee99;
+        }
+        .api_image {
+            width: 50px;
+        }
+        .card {
+           display: flex;
+           justify-content: center;
+           margin-top: 50px;
+        }
+        .card-body {
+            width: 60%;
+        
+            display: flex;
+            box-shadow: 1px 1px 10px #4a4a4a30;
+        }
+        .card-body img {
+            width: 200px;
+        }
+        .info {
+            padding-left: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="box">
+        
+    </div>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Rating</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody id="page">
+                <a href=""></a>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    let box = document.getElementById("box");
+    let page = document.getElementById("page");
+    // let list;
+    box.style.display = "none";
+    fetch("https://fakestoreapi.com/products")
+    .then((response)=>response.json())
+    .then((result)=>{
+        console.log(result);
+
+        for(let i = 0; i < result.length; i++) {
+            page.innerHTML += `<tr onclick="detail(${result[i].id})">
+                    <td>${result[i].id}</td>
+                    <td>${result[i].title}</td>
+                    <td>$${result[i].price}</td>
+                    <td>${result[i].rating.rate}</td>
+                    <td>
+                        <a href="${result[i].image}" target="_blink"><img src="${result[i].image}" alt="" class="api_image"></a>    
+                    </td>
+                </tr>`;
+        }
+        // console.log(list);
+        // page.innerHTML = list;
+    });
+    function detail(id) {
+        fetch("https://fakestoreapi.com/products/" + id)
+        .then((response) => response.json())
+        .then((data)=> {
+            box.innerHTML = `<div class="card-body">
+            <img src="${data.image}" alt="">
+            <div class="info">
+                <h3>${data.title}</h3>
+                <h4>$${data.price}</h4>
+                <h4>${data.rating.rate}</h4>
+            </div>
+        </div>
+        `;
+        box.style.display = "flex";
+        })
+    }
+</script>
+</html>
